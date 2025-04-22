@@ -544,10 +544,7 @@ Tensor swizzle_mm(const Tensor& mat1, const Tensor& mat2, bool mat1_is_swizzled,
   TensorArg targs[]{{mat1, "mat1", 0}, {mat2, "mat2", 1}};
   checkAllSameGPU(__func__, targs);
 
-  Tensor meta_mat1 = mat1.to("meta");
-  Tensor meta_mat2 = mat2.to("meta");
-  Tensor meta_result = at::mm(meta_mat1, meta_mat2);
-  Tensor result = at::empty_like(meta_result, mat1.device());
+  Tensor result = at::empty({mat1.sizes()[0], mat2.sizes()[1]}, mat1.options());
   at::ScalarType scalar_type = result.scalar_type();
 
   cublasCommonArgs args(mat1, mat2, mat1_is_swizzled, mat2_is_swizzled, result);
